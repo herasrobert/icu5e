@@ -1,7 +1,7 @@
-console.log("icu5e started")
+console.log("icu5e - tokenhud_mod.js")
 
 Hooks.on("renderTokenHUD", (tokdenHUD,html,app) => {
-    console.log("Me! Test! Rib_Rob!")
+    //console.log("icu5e - renderTokenHUD Test!")
     
     // The Icon you want to add to the HUD
     const divToAdd = $('<i class="control-icon fa fa-eye"></i>') 
@@ -14,18 +14,4 @@ Hooks.on("renderTokenHUD", (tokdenHUD,html,app) => {
       //Do something when button clicked
       check_enemies();
     })
-  })
-
-  function check_enemies() {
-    console.log("Click!2222")
-
-    // Set Distance Flag
-
-    // Get Controlled Token's Passive Perception
-
-    // Iterate Through All Hidden Enemies
-    
-    // If Enemy is within X distance
-        // If Enemy Passive Stealth <= Passive Perception
-            //Enemy toggleVisibility
-  }
+})
