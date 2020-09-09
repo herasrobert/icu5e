@@ -8,7 +8,7 @@ Hooks.once("init", () => {
 		hint: "Any 'hidden' enemy within X units of the controlled token will be un-hidden/revealed.",
 		scope: "world",
 		config: true,
-		default: 30,
+		default: 30.0,
 		type: Number
 	});
   });
