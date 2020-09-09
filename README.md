@@ -30,15 +30,14 @@ Version 1.6.0 - I want to account for walls being in the way but maybe ignore te
 
 
 <h2>ChangeLog</h2>
-<h3>Version 1.0.1</h3>
+<h3>Version 1.2.0</h3>
 <ul>
   <li>Only GM will see the tokenHUD button so only the GM can run it.</li>
   <li>In Module Settings, the default calculated distance has been changed to 32</li>
   <li>In Module Settings you'll also find an option for how to handle multiple tokens selected. Simple - The token with the highest perception will be used. Per-Token - Each token will reveal what they can from their position.</li>  
 </ul>
 
+I can be reached on Discord with any bugs you find.
 
-
-
-
-
+<h2>Known Issues/Bugs</h2>
+Token Mold can overrite all enemy tokens to Neutral or Friendly; this script only works on Hostile tokens
