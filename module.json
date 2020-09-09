@@ -7,7 +7,9 @@
     "minimumCoreVersion": "0.6.6",
     "compatibleCoreVersion":"0.6.6",
     "scripts": [
-        "scripts/tokenhud_mod.js"
+        "scripts/icu5e.js",
+        "scripts/tokenhud_mod.js",
+        "scripts/config_settings.js"
     ],
     "url": "https://github.com/herasrobert/icu5e",
     "manifest": "https://github.com/herasrobert/icu5e/releases/download/1.0.0/module.json",
