@@ -1,4 +1,4 @@
-//console.log("icu5e - icu5e.js")
+console.log("icu5e - icu5e.js")
 
 function check_enemies() {
 
@@ -6,8 +6,8 @@ function check_enemies() {
     let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
     let how_handle_multiple_tokens = game.settings.get("icu5e", "howHandleMultipleTokens").valueOf();
 
-    //console.log("max_distance: ", max_distance);
-    //console.log(how_handle_multiple_tokens);
+    //console.log("icu5e - max_distance: ", max_distance);
+    //console.log("icu5e - howHandleMultipleTokens: ", how_handle_multiple_tokens);
     
     let selected_token;
     let passive_perception = 0;
@@ -20,7 +20,7 @@ function check_enemies() {
     } else {
         selected_tokens = []; // Create an empty array that will store selected tokens we will use
 
-        if (how_handle_multiple_tokens == "Simple"){ // The token with the highest perception will be used            
+        if (how_handle_multiple_tokens == "Simple"){ // The token with the highest perception will be used
             highest_passive_perception = 0;
             let most_perceptive_token;
         
@@ -33,6 +33,7 @@ function check_enemies() {
                     highest_passive_perception = token_peception;
                     most_perceptive_token = token;
                 }
+
             });
             selected_tokens.push(most_perceptive_token);
         } else if (how_handle_multiple_tokens == "Per-Token"){
