@@ -9,6 +9,9 @@ Contains an icon in the token hud (right-click the token). When clicked on the c
 <h2>Install</h2>
 Check the releases to the right hand side
 
+![Alt Text](https://media.giphy.com/media/mAD0BrIgiM4HgdZX64/giphy.gif)
+
+
 <h2>Planned Future Features</h2>
 
 Version 1.2.0 - Version 1.0.0 only works with one token at a time. I want to allow for multiple controlled tokens, using the token with the highest passive perception regardless of how many tokens are selected. I also want to make it so only the GM has access to use the button.
