@@ -1,4 +1,4 @@
-console.log("icu5e - config_settings.js")
+//console.log("icu5e - config_settings.js")
 
 Hooks.once("init", () => {
     console.log("icu5e - init Test!")

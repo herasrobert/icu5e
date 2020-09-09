@@ -1,4 +1,4 @@
-console.log("icu5e - tokenhud_mod.js")
+//console.log("icu5e - tokenhud_mod.js")
 
 Hooks.on("renderTokenHUD", (tokdenHUD,html,app) => {
     //console.log("icu5e - renderTokenHUD Test!")
