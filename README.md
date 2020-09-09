@@ -9,8 +9,8 @@ Contains an icon in the token hud (right-click the token). When clicked on the c
 <h2>Install</h2>
 Check the releases to the right hand side
 
+<h2>Demo</h2>
 ![Alt Text](https://media.giphy.com/media/mAD0BrIgiM4HgdZX64/giphy.gif)
-
 
 <h2>Planned Future Features</h2>
 
