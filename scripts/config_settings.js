@@ -14,7 +14,7 @@ Hooks.once("init", () => {
 
 	game.settings.register("icu5e", "howHandleMultipleTokens", {
 		name: "How to handle multiple selected tokens?",
-		hint: "Simple - The token with the highest perception will be used. Per-Token - Each token will reveal when they can from tehir position.",
+		hint: "Simple - The token with the highest perception will be used. Per-Token - Each token will reveal what they can from their position.",
 		scope: "world",
 		config: true,
 		default: "Simple",

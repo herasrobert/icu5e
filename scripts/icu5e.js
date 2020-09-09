@@ -27,9 +27,10 @@ function check_enemies() {
             // Iterate through each controlled token
             canvas.tokens.controlled.forEach(token => {
                 token_peception = token.actor.data.data.skills.prc.passive; // Token Passive Perception
-        
-                // If this tokens Passive Perception is higher than the previous tokens with the highest Passive Perception
+                
+                // If this tokens Passive Perception is higher than the previous highest Passive Perception
                 if (token_peception > highest_passive_perception){
+                    highest_passive_perception = token_peception;
                     most_perceptive_token = token;
                 }
             });
@@ -60,11 +61,6 @@ function check_enemies() {
         }
       });
 
-
-
-                      // For each token in the array ( 1 or more)
-                    // Passive Perception vs. Passive Stealth
-                        // Hidden = False
 }
 
 /*
