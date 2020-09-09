@@ -1,0 +1,15 @@
+{   
+    "name": "icu5e",   
+    "title": "I See You 5e",   
+    "description": "Perception vs. Stealth Checker",   
+    "author": "Robert (Rib_Rob)",
+    "version": "1.0.0",
+    "minimumCoreVersion": "0.6.6",
+    "compatibleCoreVersion":"0.6.6",
+    "scripts": [
+        "scripts/tokenhud_mod.js"
+    ],
+    "url": "https://github.com/herasrobert/icu5e",
+    "manifest": "",
+    "download": ""
+}
