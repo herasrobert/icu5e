@@ -1,5 +1,7 @@
 console.log("icu5e - icu5e.js")
 
+// Branch - Version 1.2.1
+
 function check_enemies() {
 
     // Get Distance Flag
