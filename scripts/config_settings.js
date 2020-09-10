@@ -3,6 +3,20 @@
 Hooks.once("init", () => {
     //console.log("icu5e - init Test!")
 
+	game.settings.register("icu5e", "showIconFor", {
+		name: "Show Icon For",
+		hint: "All - The Icon will appear on every token if you're GM. Characters - Only Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition.",
+		scope: "world",
+		config: true,
+		default: "Characters",
+		type: String,
+		choices: {
+			"All": "All",
+			"Characters": "Characters",
+			"Friendlies" : "Friendlies"
+		}
+	});
+
     game.settings.register("icu5e", "calculateDistance", {
 		name: "Calculated Distance",
 		hint: "Any 'hidden' enemy within X units of the controlled token will be un-hidden/revealed.",
