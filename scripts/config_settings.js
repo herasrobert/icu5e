@@ -25,4 +25,13 @@ Hooks.once("init", () => {
 		}
 	});
 
+	game.settings.register("icu5e", "veriantPerceptionDegradation", {
+		name: "Variant Perception Degradation",
+		hint: "Perception receives a -1 modifier for every 10 feet of distance.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
   });
