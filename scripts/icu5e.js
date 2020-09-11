@@ -6,13 +6,13 @@ function check_enemies() {
     let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
     let how_handle_multiple_tokens = game.settings.get("icu5e", "howHandleMultipleTokens").valueOf();
     let is_perception_degradating = game.settings.get("icu5e", "veriantPerceptionDegradation").valueOf();
+    let allow_gm_stealth_overide = game.settings.get("icu5e", "allowGMStealthOveride").valueOf();
 
     //console.log("icu5e - max_distance: ", max_distance);
     //console.log("icu5e - howHandleMultipleTokens: ", how_handle_multiple_tokens);
     
     let selected_token;
     let perc_check_score = 0; // The final Perception score of a token
-
 
     if (canvas.tokens.controlled.length == 0){
         console.log("icu5e - this error should not have occured.");
@@ -49,14 +49,20 @@ function check_enemies() {
             // for each selected token (Only one if 'Simple', or all if 'Per-Token')
             selected_tokens.forEach(selected => {
                 let calculated_distance = canvas.grid.measureDistance(selected, placed_token); // Calculate Distance
-                if ((calculated_distance <= max_distance)) { // If Enemy is within max distance
+                if ((calculated_distance <= max_distance)) { // If Enemy is within max distance                    
+
                     let token_stealth = placed_token.actor.data.data.skills.ste.passive;
                     let perc_check_score = selected.actor.data.data.skills.prc.passive;                    
 
                     if (placed_token.data.hidden) { // If still 'Hidden' (There's a chance a previous token already revealed them and toggleVisbility would rehide them)
                         if (is_perception_degradating == true){
-                            perc_check_score -= Math.floor(calculated_distance / 10);
+                            perc_check_score -= Math.floor(calculated_distance / 10); // Degrade Perception by -1 per 10 feet                            
                             //console.log("Name: " + placed_token.name + ", PS: " + token_stealth + ", Dist: " + calculated_distance + ", PP: " +  perc_check_score);
+                        }
+
+                        // If GM Stealth Overide is Enabled and getFlag does not return undefined
+                        if (allow_gm_stealth_overide == true && !(placed_token.getFlag("icu5e", "stealth_score") === undefined)) {
+                            token_stealth = placed_token.getFlag("icu5e", "stealth_score");
                         }
 
                         if (perc_check_score >= token_stealth){ // If Enemy Passive Stealth <= Passive Perception
@@ -68,5 +74,4 @@ function check_enemies() {
             });
         }
       });
-
 }

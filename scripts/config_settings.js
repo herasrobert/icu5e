@@ -48,4 +48,13 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
+	game.settings.register("icu5e", "allowGMStealthOveride", {
+		name: "Allow GM Stealth Override",
+		hint: "Enables an input box on Hostile tokens that defaults to Passive Stealth but GM can edit the value. This value will be used for checks if enabled.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
   });
