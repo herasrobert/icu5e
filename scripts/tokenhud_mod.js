@@ -53,7 +53,7 @@ async function show_stealth_score_box(tokenHUD,html,app){
     index_of_token = canvas.tokens.controlled.indexOf(token_with_hud_open);
   }
 
-  if (!canvas.tokens.controlled[index_of_token].getFlag("icu5e", "stealth_score")) {
+  if (canvas.tokens.controlled[index_of_token].getFlag("icu5e", "stealth_score") === undefined) {
     let passive_stealth = tokenHUD.object.actor.data.data.skills.ste.passive;
     await canvas.tokens.controlled[index_of_token].setFlag("icu5e", "stealth_score", passive_stealth);
   }
@@ -65,7 +65,7 @@ async function show_stealth_score_box(tokenHUD,html,app){
 
   // Do something when it's clicked
   divToAdd.change(async (inputbox) => {
-    if(!canvas.tokens.controlled[index_of_token]) return
+    if(canvas.tokens.controlled[index_of_token] === undefined ) return
     await canvas.tokens.controlled[index_of_token].setFlag("icu5e", "stealth_score", inputbox.target.value); // Set stealth_score Flag    
   });
 }
