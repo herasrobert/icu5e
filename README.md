@@ -19,20 +19,22 @@ Check the releases to the right hand side
 
 
 <h2>Planned Future Features</h2>
+<a href="https://edhel.online/wiki/Icue5e#Version_1.3.0/">My Wiki</a>
 
-Version 1.3.0 - Improve the distance calculation. 
-
-Version 1.4.0 - I want to give the GM the option to have players roll rather than use the Passive Perception. The idea is to have the GM be able to use the characters passive perception or prompt the user to roll a perception check.
-
-Version 1.5.0 - The hidden token will have their Passive Stealth as a default value but the GM will be able to override the value with something of their own choosing. This is useful for DM's like me who roll a stealth roll for each monster when prepping a scene.
-
-Version 1.6.0 - I want to account for walls being in the way but maybe ignore terrain and invisible walls? Also, I'd like to limit the token hud interface to only player Actors and not NPCs or monsters.
 
 <h2>Known Issues/Bugs</h2>
 Token Mold can overrite all enemy tokens to Neutral or Friendly; this script only works on Hostile tokens
 Because of the way the distance calculation works, add 2 units to the actual value you want. So if you want to reveal a token 10 ft away, use 12 units in Module Settings. For 30 units, use 32. I'm hoping to improve on this really soon. You can also set it to a really high value to unhide all monsters on the map as your players will likely come across them in a room.
 
 <h2>ChangeLog</h2>
+
+<h4>Version 1.3.0</h4>
+<ul>
+  <li>Variant Passive Degradation (Module Setting). I've added in an option for 'Variant Perception Degradation'. This implements the passive perception losing a score of 1 per 10 feet of distance. The further the target, the worse your perception.</li>
+  <li>Show Icon For (Module Setting) Disable tokenHUD icon on some tokens (Default: Characters). All - The Icon will appear on every token. Characters - Only appears on Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition. The icon will only ever appear if you're GM, players do not have access to the icon.</li>
+  <li>Allow GM Stealth Override (Module Setting) - If enabled, Hostile tokens will now have an input box on the bottom right which will default to the tokens Passive Stealth. This input box is what will be checked against the Passive Perception to determine whether or not to reveal the token. It allows GM's who like to roll for Stealth as they're prepping a scene (like me) to use the number rolled rather than the Passive Stealth.</li>
+</ul>
+
 <h4>Version 1.2.0</h4>
 <ul>
   <li>Only GM will see the tokenHUD button so only the GM can run it.</li>
