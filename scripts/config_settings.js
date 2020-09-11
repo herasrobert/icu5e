@@ -57,4 +57,13 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
+	game.settings.register("icu5e", "rollHostileStealth", {
+		name: "Roll Hostile Stealth",
+		hint: "[Requires Allow GM Stealth Override] Button to roll hostile tokens stealth roll and use that value.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
   });
