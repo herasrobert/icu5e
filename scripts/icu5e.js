@@ -113,7 +113,7 @@ async function check_enemies(perception_type) {
                         if (account_for_walls == true){                            
                             const ray = new Ray({ x: selected.x, y: selected.y }, { x: placed_token.x, y: placed_token.y });
                             const collisions = WallsLayer.getWallCollisionsForRay(ray, canvas.walls.blockVision);                            
-                            wall_in_the_way = collisions.length > 0;                            
+                            wall_in_the_way = collisions.length > 0;
                         }
 
                         if (is_perception_degradating == true){
@@ -214,6 +214,9 @@ function find_selected_hostile(tokenHUD){
       });*/
     
 
+
+
+//// NOTES: I don't think it should be updateToken as it seems that gets called every time you even place a token.
 Hooks.on(`updateToken`, (scene, data, update, options) => {
     if (game.settings.get("icu5e", "autoRunOnTokenMove").valueOf()){
         if (update.x || update.y) { // If the x/y is updated, they moved.
