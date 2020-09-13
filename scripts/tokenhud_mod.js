@@ -44,15 +44,20 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 // Show the Icon to test Perception
 function show_icon(tokenHUD,html){
     // The Icon you want to add to the HUD
-    const divToAdd = $('<i class="control-icon fa fa-eye"></i>');
+    const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
+    const scan_roll_btn = $('<i title="Roll Perception" class="control-icon fa fa-eye" ></i>');
 
     // Add to right or left side of hud
-    html.find(".right").append(divToAdd);
+    html.find(".right").append(scan_passive_btn);
+    html.find(".right").append(scan_roll_btn);
 
     // Do something when it's clicked
-    divToAdd.click(async () => {
-      //Do something when button clicked
-      check_enemies();
+    scan_passive_btn.click(async () => {      
+      check_enemies("use_passive");
+    })
+
+    scan_roll_btn.click(async () => {
+      check_enemies("use_roll");
     })
 }
 
@@ -65,7 +70,7 @@ async function show_stealth_score_box(selected_hostile_token, tokenHUD,html){
     await selected_hostile_token.setFlag("icu5e", "stealth_score", passive_stealth);
   }
   // The Icon you want to add to the HUD
-  const divToAdd = $('<input id="stl_scr_inp_box" type="text" name="stealth_score_inp_box" value="' + selected_hostile_token.getFlag("icu5e", "stealth_score") + '"></input>');
+  const divToAdd = $('<input id="stl_scr_inp_box" title="Current Stealth Score" type="text" name="stealth_score_inp_box" value="' + selected_hostile_token.getFlag("icu5e", "stealth_score") + '"></input>');
 
   // Add to right or left side of hud
   html.find(".right").append(divToAdd);
@@ -82,7 +87,7 @@ async function show_stealth_score_box(selected_hostile_token, tokenHUD,html){
 // Show the Icon to test Perception
 async function show_stealth_roll(selected_hostile_token, tokenHUD,html){
   // The Icon you want to add to the HUD
-  const divToAdd = $('<i class="control-icon fa fa-low-vision"></i>');
+  const divToAdd = $('<i title="Roll for Stealth" class="control-icon fa fa-low-vision"></i>');
 
   // Add to right or left side of hud
   html.find(".right").append(divToAdd);

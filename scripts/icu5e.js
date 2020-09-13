@@ -1,25 +1,23 @@
 // console.log("icu5e - icu5e.js")
 
-async function check_enemies() {
+async function check_enemies(perception_type) {
 
     // Get Distance Flag
     let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
     let how_handle_multiple_tokens = game.settings.get("icu5e", "howHandleMultipleTokens").valueOf();
     let is_perception_degradating = game.settings.get("icu5e", "veriantPerceptionDegradation").valueOf();
     let allow_gm_stealth_overide = game.settings.get("icu5e", "allowGMStealthOveride").valueOf();
-    let display_perception_results = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
+    let display_perception_results_text = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
     let account_for_walls = game.settings.get("icu5e", "acountForWalls").valueOf();
     let distance_type = game.settings.get("icu5e", "distanceCalculationType").valueOf();
-    
-    
+    let show_icon_for = game.settings.get("icu5e", "showIconFor").valueOf();
 
     
 
     //console.log("icu5e - max_distance: ", max_distance);
     //console.log("icu5e - howHandleMultipleTokens: ", how_handle_multiple_tokens);
     
-    let selected_token;
-    let perc_check_score = 0; // The final Perception score of a token
+    //let selected_token;
 
     if (canvas.tokens.controlled.length == 0){
         console.log("icu5e - this error should not have occured.");
@@ -45,27 +43,56 @@ async function check_enemies() {
             });
             selected_tokens.push(most_perceptive_token);
         } else if (how_handle_multiple_tokens == "Per-Token"){
-            selected_tokens = canvas.tokens.controlled;
+
+            // Characters
+            for (const controlled of canvas.tokens.controlled) {
+                // Determine which tokens should be taken into account as controlled
+                if (show_icon_for == "All"){
+                    selected_tokens.push(controlled);
+                } else if (show_icon_for == "Characters" && controlled.actor.data.type == "character"){                    
+                    selected_tokens.push(controlled);
+                } else if (show_icon_for == "Friendlies" && (controlled.data.disposition === 0 || controlled.data.disposition === 1)){                    
+                    selected_tokens.push(controlled);
+                }
+            }
         }
     }
 
-    let perception_results = "";
-
-
-    ///
-    /// Roll Perception Checks here - below will have each character token rolling per monster
-    ///
-
+    let perception_results_text = "";
+    let perception_scores_list = [];
     let wall_in_the_way = false;
 
     for (const placed_token of canvas.tokens.placeables) {
         if (placed_token.data.disposition === -1){ 
             for (const selected of selected_tokens) {
+                let perc_check_score = 0; // The final Perception score of a token
                 if (placed_token.data.hidden) { // If token is 'Hidden'
 
                     let token_stealth = placed_token.actor.data.data.skills.ste.passive;
-                    let perc_check_score = selected.actor.data.data.skills.prc.passive;
                     let calculated_distance = 0;
+
+                    // Keep a list of Character tokens and the Perception Score they already rolled
+                    if (!perception_scores_list.some(token => token.id === selected.id)){
+                        if (perception_type == "use_roll"){
+                            // Config - Auto-roll
+                            // else
+                            // Request roll using socket
+
+//////// What if player isn't present?
+
+                            // Read chat or "pick it up with a hook on gm side if you need to do something with it" - Vance
+
+                            // perc_check_score = rolled value
+                        } else {
+                            perc_check_score = selected.actor.data.data.skills.prc.passive
+                        }
+
+                        // Add token to the list we're using to keep track of which tokens already have a perception score to work with
+                        perception_scores_list.push({id:selected.id, name:selected.name, perception:perc_check_score});
+                        console.log(perception_scores_list);
+                    }
+
+                    if (perc_check_score == 0){ perc_check_score = perception_scores_list.find(token => token.id === selected.id).perception; }
 
                     // Calculate distance based on chosen method
                     if (distance_type == "Euclidean"){
@@ -101,29 +128,22 @@ async function check_enemies() {
 
                         if (perc_check_score >= token_stealth && !wall_in_the_way){ // If Enemy Passive Stealth <= Passive Perception
                             await placed_token.toggleVisibility();
-                            //console.log(selected.name, perc_check_score);
+                            console.log(selected.name, perc_check_score);
                             // Append Chat Message
-                            perception_results += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
+                            perception_results_text += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
                         }
                     }
                 }
             }
         }
     }
-///
-
-/// Rewrite the logic - the bug is that Grigori will reveal the enemy token and then Donny will re-reveal the same token
-/// which shouldn't be happening.
-
-///
-
       
-    if (display_perception_results == true){
-        if (perception_results == ""){perception_results = "It doesn't seem anyone was revealed."}
+    if (display_perception_results_text == true){
+        if (perception_results_text == ""){perception_results_text = "It doesn't seem anyone was revealed."}
         let chatData = {
             user: game.user._id,
             speaker: ChatMessage.getSpeaker(),
-            content: perception_results
+            content: perception_results_text
         };
         ChatMessage.create(chatData, {});
     }
@@ -182,7 +202,7 @@ function find_selected_hostile(tokenHUD){
                             //list_of_revealed_hostile.push(placed_token.id); // Add revealed hostile token ID to list_of_revealed_hostiles
                             console.log(placed_token.id)
 
-                            ///perception_results += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
+                            ///perception_results_text += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
                             console.log(selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]");
                         }                        
                     }
@@ -192,4 +212,12 @@ function find_selected_hostile(tokenHUD){
             });
         }
       });*/
-      
+    
+
+Hooks.on(`updateToken`, (scene, data, update, options) => {
+    if (game.settings.get("icu5e", "autoRunOnTokenMove").valueOf()){
+        if (update.x || update.y) { // If the x/y is updated, they moved.
+            check_enemies("use_passive");
+        }
+    }
+});

@@ -3,15 +3,16 @@
     "title": "I See You 5e",   
     "description": "Perception vs. Stealth Checker",   
     "author": "Robert (Rib_Rob)",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "minimumCoreVersion": "0.6.6",
     "compatibleCoreVersion":"0.6.6",
+    "socket": true,
     "scripts": [
         "scripts/icu5e.js",
         "scripts/tokenhud_mod.js",
         "scripts/config_settings.js"
     ],
     "url": "https://github.com/herasrobert/icu5e",
-    "manifest": "https://github.com/herasrobert/icu5e/releases/download/1.3.5/module.json",
-    "download": "https://github.com/herasrobert/icu5e/releases/download/1.3.5/icu5e.zip"
+    "manifest": "https://github.com/herasrobert/icu5e/releases/download/1.3.6/module.json",
+    "download": "https://github.com/herasrobert/icu5e/releases/download/1.3.6/icu5e.zip"
 }

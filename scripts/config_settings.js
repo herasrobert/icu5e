@@ -97,5 +97,13 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
+	game.settings.register("icu5e", "autoRunOnTokenMove", {
+		name: "Automatically Scan",
+		hint: "[!EXPERIMENTAL!] Automatically scan each time a token is moved. (Doesn't work with ruler it seems.)",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
 
   });
