@@ -17,9 +17,22 @@ Hooks.once("init", () => {
 		}
 	});
 
+	game.settings.register("icu5e", "distanceCalculationType", {
+		name: "How to calculate the distance?",
+		hint: "Euclidean - Use math to determine distance; doesn't match grid distance and diagonal enemies are further cause math. Grid - Use the grid distance",
+		scope: "world",
+		config: true,
+		default: "Grid",
+		type: String,
+		choices: {
+			"Grid": "Grid",
+			"Euclidean": "Euclidean"
+		}
+	});
+
     game.settings.register("icu5e", "calculateDistance", {
 		name: "Calculated Distance",
-		hint: "Any 'hidden' enemy within X units of the controlled token will be un-hidden/revealed.",
+		hint: "[Only if using Euclidean] Any 'hidden' enemy within X units of the controlled token will be un-hidden/revealed.",
 		scope: "world",
 		config: true,
 		default: 32,

@@ -9,6 +9,8 @@ async function check_enemies() {
     let allow_gm_stealth_overide = game.settings.get("icu5e", "allowGMStealthOveride").valueOf();
     let display_perception_results = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
     let account_for_walls = game.settings.get("icu5e", "acountForWalls").valueOf();
+    let distance_type = game.settings.get("icu5e", "distanceCalculationType").valueOf();
+    
     
 
     
@@ -61,25 +63,35 @@ async function check_enemies() {
             for (const selected of selected_tokens) {
                 if (placed_token.data.hidden) { // If token is 'Hidden'
 
-                    let calculated_distance = canvas.grid.measureDistance(selected, placed_token); // Calculate Distance                
+                    let token_stealth = placed_token.actor.data.data.skills.ste.passive;
+                    let perc_check_score = selected.actor.data.data.skills.prc.passive;
+                    let calculated_distance = 0;
 
-                    if ((calculated_distance <= max_distance)) { // If Enemy is within max distance   
+                    // Calculate distance based on chosen method
+                    if (distance_type == "Euclidean"){
+                        calculated_distance = canvas.grid.measureDistance(selected, placed_token);
+                    } else if (distance_type == "Grid") {
+                        // Measure grid distance
+                        let gridsize = canvas.grid.size;
+                        let d1 = Math.abs((selected.x - placed_token.x) / gridsize);
+                        let d2 = Math.abs((selected.y - placed_token.y) / gridsize);
+                        let dist = Math.max(d1, d2);
 
-                        if (account_for_walls == true){
-                        
+                        calculated_distance = dist * canvas.scene.data.gridDistance;
+                    }
+
+                    if ((calculated_distance <= max_distance)) { // If Enemy is within max distance
+
+                        // Draw ray from selected token to hostile and if it collides with a wall return if it collides with a wall
+                        if (account_for_walls == true){                            
                             const ray = new Ray({ x: selected.x, y: selected.y }, { x: placed_token.x, y: placed_token.y });
-                            const collisions = WallsLayer.getWallCollisionsForRay(ray, canvas.walls.blockVision);
-                            
-                            wall_in_the_way = collisions.length > 0;
-                            
+                            const collisions = WallsLayer.getWallCollisionsForRay(ray, canvas.walls.blockVision);                            
+                            wall_in_the_way = collisions.length > 0;                            
                         }
-
-                        let token_stealth = placed_token.actor.data.data.skills.ste.passive;
-                        let perc_check_score = selected.actor.data.data.skills.prc.passive;
 
                         if (is_perception_degradating == true){
                             perc_check_score -= Math.floor(calculated_distance / 10); // Degrade Perception by -1 per 10 feet                            
-                            //console.log("Name: " + placed_token.name + ", PS: " + token_stealth + ", Dist: " + calculated_distance + ", PP: " +  perc_check_score);
+                            console.log("Name: " + placed_token.name + ", PS: " + token_stealth + ", Dist: " + calculated_distance + ", PP: " +  perc_check_score);
                         }
 
                         // If GM Stealth Overide is Enabled and getFlag does not return undefined
