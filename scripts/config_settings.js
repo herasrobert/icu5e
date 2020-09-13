@@ -75,4 +75,14 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
+	game.settings.register("icu5e", "acountForWalls", {
+		name: "Account For Walls",
+		hint: "Walls block whether a token is revealed or not.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
+
   });
