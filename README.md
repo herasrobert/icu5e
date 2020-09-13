@@ -14,6 +14,12 @@ Handles multiple tokens selected. Simple - The token with the highest perception
 
 **Allow GM Stealth Override (Module Setting)** - If enabled, Hostile tokens will now have an input box on the bottom right which will default to the tokens Passive Stealth. This input box is what will be checked against the Passive Perception to determine whether or not to reveal the token. It allows GM's who like to roll for Stealth as they're prepping a scene (like me) to use the number rolled rather than the Passive Stealth.
 
+**Roll Hostile Stealth (Module Setting)** - Button that will roll a stealth check for the selected Hostile token and this is will be the value used against Perception to determine if the hostile token should be revealed.
+
+**Display Perception Results (Module Setting)** - Print a chat message with each token revealed by which token. i.e. "Donny revealed Shadow [14]".
+
+**Account for Walls (Module Settings)** - If there's a wall that blocks line of sight, the token will not be revealed.
+
 <h2>Install</h2>
 Check the releases to the right hand side
 
@@ -33,6 +39,19 @@ Token Mold can overrite all enemy tokens to Neutral or Friendly; this script onl
 Because of the way the distance calculation works, add 2 units to the actual value you want. So if you want to reveal a token 10 ft away, use 12 units in Module Settings. For 30 units, use 32. I'm hoping to improve on this really soon. You can also set it to a really high value to unhide all monsters on the map as your players will likely come across them in a room.
 
 <h2>ChangeLog</h2>
+
+<h4>Version 1.3.5</h4>
+Only show icons for Hostiles tokens when Hostile token is hidden to have a cleaner UI and not clutter the TokenHUD
+
+Roll Hostile Stealth (Module Setting) - Button that will roll a stealth check for the selected Hostile token and this is will be the value used against Perception to determine if the hostile token should be revealed.
+
+Display Perception Results (Module Setting) - Print a chat message with each token revealed by which token. i.e. "Donny revealed Shadow [14]".
+
+Account for Walls (Module Settings) - If there's a wall that blocks line of sight, the token will not be revealed.
+
+Distance calculation can now be done using Euclidean math or the grid distance.
+
+Bug Fix: Improved handling of switching hostile tokens to be visible to minimize buggy behavior
 
 <h4>Version 1.3.0</h4>
 <ul>
