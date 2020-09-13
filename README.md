@@ -43,17 +43,14 @@ Because of the way the distance calculation works, add 2 units to the actual val
 <h2>ChangeLog</h2>
 
 <h4>Version 1.3.5</h4>
-Only show icons for Hostiles tokens when Hostile token is hidden to have a cleaner UI and not clutter the TokenHUD
-
-Roll Hostile Stealth (Module Setting) - Button that will roll a stealth check for the selected Hostile token and this is will be the value used against Perception to determine if the hostile token should be revealed.
-
-Display Perception Results (Module Setting) - Print a chat message with each token revealed by which token. i.e. "Donny revealed Shadow [14]".
-
-Account for Walls (Module Settings) - If there's a wall that blocks line of sight, the token will not be revealed.
-
-Distance calculation can now be done using Euclidean math or the grid distance.
-
-Bug Fix: Improved handling of switching hostile tokens to be visible to minimize buggy behavior
+<ul>
+  <li>Only show icons for Hostiles tokens when Hostile token is hidden to have a cleaner UI and not clutter the TokenHUD</li>
+  <li>Roll Hostile Stealth (Module Setting) - Button that will roll a stealth check for the selected Hostile token and this is will be the value used against Perception to determine if the hostile token should be revealed.</li>
+  <li>Display Perception Results (Module Setting) - Print a chat message with each token revealed by which token. i.e. "Donny revealed Shadow [14]".</li>
+  <li>Account for Walls (Module Settings) - If there's a wall that blocks line of sight, the token will not be revealed.</li>
+  <li>Distance calculation can now be done using Euclidean math or the grid distance.</li>
+  <li>Bug Fix: Improved handling of switching hostile tokens to be visible to minimize buggy behavior</li>
+</ul>
 
 <h4>Version 1.3.0</h4>
 <ul>
