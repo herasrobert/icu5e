@@ -56,10 +56,19 @@ Hooks.once("init", () => {
 		default: false,
 		type: Boolean,
 	});
-
+	
 	game.settings.register("icu5e", "rollHostileStealth", {
 		name: "Roll Hostile Stealth",
 		hint: "[Requires Allow GM Stealth Override] Button to roll hostile tokens stealth roll and use that value.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
+	game.settings.register("icu5e", "displayPerceptionResults", {
+		name: "Display Perception Results",
+		hint: "Display the results of the perception check in the chat.",
 		scope: "world",
 		config: true,
 		default: false,

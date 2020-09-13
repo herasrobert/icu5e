@@ -37,26 +37,9 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
           }
         }
       }
-
       
     }
 })
-
-// Find and return the hostile token that has the tokenHUD open
-function find_selected_hostile(tokenHUD){
-  let index_of_token = 0;
-  let selected_hostile_token;
-
-  // If more than one token controlled; find token with the TokenHUD opened and that's the one we'll work with
-  if (canvas.tokens.controlled.length > 1) {
-    // Get ID of the token that tokenHUD was opened on
-    let token_with_hud_open = canvas.tokens.controlled.find(token => token.id == tokenHUD.object.actor.token.id);
-    // Get array position of token in the controlled list
-    index_of_token = canvas.tokens.controlled.indexOf(token_with_hud_open);        
-  } 
-
-  return canvas.tokens.controlled[index_of_token]; // Our selected token, the token with TokenHUD opened
-}
 
 // Show the Icon to test Perception
 function show_icon(tokenHUD,html){
@@ -67,7 +50,7 @@ function show_icon(tokenHUD,html){
     html.find(".right").append(divToAdd);
 
     // Do something when it's clicked
-    divToAdd.click(() => {
+    divToAdd.click(async () => {
       //Do something when button clicked
       check_enemies();
     })
@@ -75,23 +58,14 @@ function show_icon(tokenHUD,html){
 
 // Show Box to allow GM to insert Stealth Score
 async function show_stealth_score_box(selected_hostile_token, tokenHUD,html){
-/*
-  if (canvas.tokens.controlled[index_of_token].getFlag("icu5e", "stealth_score") === undefined) {
-    let passive_stealth = tokenHUD.object.actor.data.data.skills.ste.passive;
-    await canvas.tokens.controlled[index_of_token].setFlag("icu5e", "stealth_score", passive_stealth);
-  }
-  // The Icon you want to add to the HUD
-  const divToAdd = $('<input id="stl_scr_inp_box" type="text" name="stealth_score_inp_box" value="' + canvas.tokens.controlled[index_of_token].getFlag("icu5e", "stealth_score") + '"></input>');
-*/
-
+  
+  // if stealth_score flag isn't defined; default it to the hostile tokens Passive Stealth
   if (selected_hostile_token.getFlag("icu5e", "stealth_score") === undefined) {
     let passive_stealth = tokenHUD.object.actor.data.data.skills.ste.passive;
     await selected_hostile_token.setFlag("icu5e", "stealth_score", passive_stealth);
   }
   // The Icon you want to add to the HUD
   const divToAdd = $('<input id="stl_scr_inp_box" type="text" name="stealth_score_inp_box" value="' + selected_hostile_token.getFlag("icu5e", "stealth_score") + '"></input>');
-
-
 
   // Add to right or left side of hud
   html.find(".right").append(divToAdd);
@@ -135,7 +109,8 @@ async function show_stealth_roll(selected_hostile_token, tokenHUD,html){
     // if token is not undefined
     if(selected_hostile_token === undefined ) return
 
-    // Save the new stealth score to the stealth_score flag
-    await selected_hostile_token.setFlag("icu5e", "stealth_score", rolled_stealth.total); // Set stealth_score Flag
+      // Save the new stealth score to the stealth_score flag
+      await selected_hostile_token.setFlag("icu5e", "stealth_score", rolled_stealth.total); // Set stealth_score Flag
   })
 }
+
