@@ -4,13 +4,13 @@ A module for <a href="https://foundryvtt.com/">FoundryVTT</a> that lets you draw
 
 <h2>Features</h2>
 
-Reveal any hidden enemies within X units if the Perception of the controlled token is greater than the Stealth of the Hostile token. The number of units can be edited within the Module Settings window. Adds an icon in the token hud (right-click the token).
+**Reveal any hidden enemies within X units** if the Perception of the controlled token is greater than the Stealth of the Hostile token. The number of units can be edited within the Module Settings window. Adds an icon in the token hud (right-click the token).
 
 Handles multiple tokens selected. Simple - The token with the highest perception will be used. Per-Token - Each token will reveal what they can from their position
 
 **Variant Passive Degradation (Module Setting)** - I've added in an option for 'Variant Perception Degradation'. This implements the passive perception losing a score of 1 per 10 feet of distance. The further the target, the worse your perception.
 
-S**how Icon For (Module Setting)** - Disable tokenHUD icon on some tokens (Default: Characters). All - The Icon will appear on every token. Characters - Only appears on Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition. The icon will only ever appear if you're GM, players do not have access to the icon.
+**Show Icon For (Module Setting)** - Disable tokenHUD icon on some tokens (Default: Characters). All - The Icon will appear on every token. Characters - Only appears on Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition. The icon will only ever appear if you're GM, players do not have access to the icon.
 
 **Allow GM Stealth Override (Module Setting)** - If enabled, Hostile tokens will now have an input box on the bottom right which will default to the tokens Passive Stealth. This input box is what will be checked against the Passive Perception to determine whether or not to reveal the token. It allows GM's who like to roll for Stealth as they're prepping a scene (like me) to use the number rolled rather than the Passive Stealth.
 
