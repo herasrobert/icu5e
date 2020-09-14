@@ -45,7 +45,7 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 function show_icon(tokenHUD,html){
     // The Icon you want to add to the HUD
     const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
-    const scan_roll_btn = $('<i title="Roll Perception" class="control-icon fa fa-eye" ></i>');
+    const scan_roll_btn = $('<i title="Roll for Active Perception" class="control-icon fa fa-binoculars" ></i>');
 
     // Add to right or left side of hud
     html.find(".right").append(scan_passive_btn);
@@ -53,11 +53,11 @@ function show_icon(tokenHUD,html){
 
     // Do something when it's clicked
     scan_passive_btn.click(async () => {      
-      check_enemies("use_passive");
+      passive_check_enemies("use_passive");
     })
 
     scan_roll_btn.click(async () => {
-      check_enemies("use_roll");
+      active_check_enemies("use_roll");
     })
 }
 

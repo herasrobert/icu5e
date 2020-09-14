@@ -97,9 +97,22 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
+	game.settings.register("icu5e", "perceptionRollType", {
+		name: "Perception Roll Type",
+		hint: "[!Not Working!] Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
+		scope: "world",
+		config: true,
+		default: "Auto",
+		type: String,
+		choices: {
+			"Auto": "Auto",
+			"Request": "Request"
+		}
+	});
+
 	game.settings.register("icu5e", "autoRunOnTokenMove", {
 		name: "Automatically Scan",
-		hint: "[!EXPERIMENTAL!] Automatically scan each time a token is moved. (Doesn't work with ruler it seems.)",
+		hint: "[!Highly EXPERIMENTAL!] Automatically scan each time a token is moved. (Doesn't work with ruler it seems.)",
 		scope: "world",
 		config: true,
 		default: false,
