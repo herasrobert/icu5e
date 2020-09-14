@@ -42,6 +42,13 @@ Because of the way the distance calculation works, add 2 units to the actual val
 
 <h2>ChangeLog</h2>
 
+<h4>Version 1.3.8</h4>
+<ul>
+  <li>Groundwork for having GM auto-roll perception or request player to roll perception. Also setup a 'scan' to occur every time a token is moved using it's passive perception to experiment with it [EXPERIMENTAL!]. </li>
+  <li>Bug Fix: If a token is touching a wall, it registers as a collision. </li>
+  <li>Groundwork for active perception rolls.</li>
+</ul>
+
 <h4>Version 1.3.5</h4>
 <ul>
   <li>Only show icons for Hostiles tokens when Hostile token is hidden to have a cleaner UI and not clutter the TokenHUD</li>
