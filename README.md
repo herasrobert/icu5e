@@ -22,6 +22,8 @@ Handles multiple tokens selected. Simple - The token with the highest perception
 
 **Account for Walls (Module Settings)** - If there's a wall that blocks line of sight, the token will not be revealed.
 
+**Automatice Passive Perception Checks (Module Settings)[Experimental]** - Autmatically check nearby tokens to reveal them when token is moved.
+
 <h2>Install</h2>
 Check the releases to the right hand side
 
