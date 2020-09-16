@@ -93,7 +93,7 @@ Hooks.once("init", () => {
 	});
 
 	game.settings.register("icu5e", "displayPerceptionResults", {
-		name: "[Bugged!] Display Perception Results",
+		name: "Display Passive Perception Results",
 		hint: "Display the results of the perception check in the chat.",
 		scope: "world",
 		config: true,
@@ -110,8 +110,8 @@ Hooks.once("init", () => {
 		type: Boolean,
 	});
 
-	game.settings.register("icu5e", "perceptionRollType", {
-		name: "Perception Roll Type",
+	game.settings.register("icu5e", "activePerceptionRollType", {
+		name: "Active Perception Roll Type",
 		hint: "[Auto works; Request Doesn't] Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
 		scope: "world",
 		config: true,
@@ -124,8 +124,8 @@ Hooks.once("init", () => {
 	});
 
 	game.settings.register("icu5e", "autoRunOnTokenMove", {
-		name: "Automatically Scan",
-		hint: "[!Highly EXPERIMENTAL!] Automatically scan each time a token is moved. (Doesn't work with ruler it seems.)",
+		name: "Automatically Scan on Token move",
+		hint: "[!EXPERIMENTAL!] Automatically scan each time a token is moved. (Doesn't work with ruler it seems.)",
 		scope: "world",
 		config: true,
 		default: false,

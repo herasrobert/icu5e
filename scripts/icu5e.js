@@ -69,8 +69,7 @@
 });
 
 function passive_check_enemies() {
-
-    let display_perception_results_text = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
+    chat_text = "";
 
     selected_tokens = get_selected_tokens();
 
@@ -90,22 +89,15 @@ function passive_check_enemies() {
             }
         }
     }
+
+    print_results_to_chat(chat_text);
       
-    if (display_perception_results_text == true){
-        if (perception_results_text == ""){perception_results_text = "It doesn't seem anyone was revealed."}
-        let chatData = {
-            user: game.user._id,
-            speaker: ChatMessage.getSpeaker(),
-            content: perception_results_text
-        };
-        ChatMessage.create(chatData, {});
-    }
+    
 }
 
 
 async function active_check_enemies() {
-    let perception_roll_type = game.settings.get("icu5e", "perceptionRollType").valueOf();
-    let display_perception_results_text = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
+    let perception_roll_type = game.settings.get("icu5e", "activePerceptionRollType").valueOf();
     
     chat_text = "";
 
@@ -142,23 +134,6 @@ async function active_check_enemies() {
             }
         }
 
-        
-        /*
-        if (display_perception_results_text == true){
-            //if (chat_text == ""){chat_text = "It doesn't seem anyone was revealed."}
-            let chatData = {
-                user: game.user._id,
-                speaker: ChatMessage.getSpeaker(),
-                content: chat_text
-            };
-            ChatMessage.create(chatData, {});
-        }*/
-
-
-
-
-
-
     } else if (perception_roll_type == "Request"){
         roll_results_list == []; // Reset Roll Results List in case of previous rolls
 
@@ -180,6 +155,8 @@ async function active_check_enemies() {
         
 
     }
+
+    print_results_to_chat(chat_text);
 }
 
 
@@ -209,8 +186,7 @@ function get_selected_tokens(){
 }
 
 // Check if Token is within defined range of another token i.e. Is friendly token within range of hostile token
-function is_within_range(selected_token, placed_token){
-    let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
+function get_calculated_distance(selected_token, placed_token){
     let distance_type = game.settings.get("icu5e", "distanceCalculationType").valueOf();
     let calculated_distance = 0;
 
@@ -226,7 +202,14 @@ function is_within_range(selected_token, placed_token){
 
         calculated_distance = dist * canvas.scene.data.gridDistance;
     }
-    return (calculated_distance <= max_distance);
+    return calculated_distance ;
+}
+
+function is_within_range(selected_token, placed_token){
+    let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
+
+    calculated_distance = get_calculated_distance(selected_token, placed_token)
+    return (calculated_distance <= max_distance)
 }
 
 // Check if hostile token should be revealed; then reveal
@@ -249,8 +232,8 @@ async function check_hostile_token(friendly_token, hostile_token, perception_sco
     }
 
     if (is_perception_degradating == true){
-        perception_score -= Math.floor(calculated_distance / 10); // Degrade Perception by -1 per 10 feet                            
-        //console.log("Name: " + hostile_token.name + ", PS: " + stealth_score + ", Dist: " + calculated_distance + ", PP: " +  perception_score);
+        // Degrade Perception by -1 per 10 feet
+        perception_score -= Math.floor(get_calculated_distance(friendly_token, hostile_token) / 10);
     }
 
     // If GM Stealth Overide is Enabled and getFlag does not return undefined
@@ -258,10 +241,24 @@ async function check_hostile_token(friendly_token, hostile_token, perception_sco
         stealth_score = hostile_token.getFlag("icu5e", "stealth_score");
     }
     // If Enemy Passive Stealth <= Passive Perception AND no walls are in the way
-    if (perception_score >= stealth_score && !wall_in_the_way){ 
-        await hostile_token.toggleVisibility();
+    if (perception_score >= stealth_score && !wall_in_the_way){
         chat_text += friendly_token.name + " revealed " + hostile_token.name + " [" + stealth_score + "]<br>";
+        await hostile_token.toggleVisibility();        
         //console.log(friendly_token.name, "revealed ", hostile_token.name);
+    }
+}
+
+function print_results_to_chat(results){
+    let display_perception_results_text = game.settings.get("icu5e", "displayPerceptionResults").valueOf();
+
+    if (display_perception_results_text == true){
+        if (results == ""){results = "It doesn't seem anyone was revealed."}
+        let chatData = {
+            user: game.user._id,
+            speaker: ChatMessage.getSpeaker(),
+            content: results
+        };
+        ChatMessage.create(chatData, {});
     }
 }
 
@@ -290,9 +287,9 @@ which, as mentioned above, removes UUID from list, so you can't have 2 events tr
 Hooks.on(`updateToken`, (scene, data, update, options) => {
     if (game.settings.get("icu5e", "autoRunOnTokenMove").valueOf()){
         if (update.x || update.y) { // If the x/y is updated, they moved.
-            // if token is not hostile
-                // if (token is character && Character is set) || (token is friend && friendly is set)
+            if (data.disposition != -1){ // If token is not hostile
                 passive_check_enemies();
+            }
         }
     }
 });
