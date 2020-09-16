@@ -41,7 +41,7 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
     }
 })
 
-// Show the Icon to test Perception
+// Show the Icon to 'Scan' with Perception
 function show_icon(tokenHUD,html){
     // The Icon you want to add to the HUD
     const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
@@ -53,11 +53,11 @@ function show_icon(tokenHUD,html){
 
     // Do something when it's clicked
     scan_passive_btn.click(async () => {      
-      passive_check_enemies("use_passive");
+      passive_check_enemies();
     })
 
     scan_roll_btn.click(async () => {
-      active_check_enemies("use_roll");
+      active_check_enemies();
     })
 }
 
@@ -84,7 +84,7 @@ async function show_stealth_score_box(selected_hostile_token, tokenHUD,html){
   });
 }
 
-// Show the Icon to test Perception
+// Show the Icon to Roll a Stealth Roll for Token
 async function show_stealth_roll(selected_hostile_token, tokenHUD,html){
   // The Icon you want to add to the HUD
   const divToAdd = $('<i title="Roll for Stealth" class="control-icon fa fa-low-vision"></i>');
@@ -119,3 +119,18 @@ async function show_stealth_roll(selected_hostile_token, tokenHUD,html){
   })
 }
 
+// Find and Return the hostile token that has the tokenHUD open
+function find_selected_hostile(tokenHUD){
+  let index_of_token = 0;
+  let selected_hostile_token;
+
+  // If more than one token controlled; find token with the TokenHUD opened and that's the one we'll work with
+  if (canvas.tokens.controlled.length > 1) {
+    // Get ID of the token that tokenHUD was opened on
+    let token_with_hud_open = canvas.tokens.controlled.find(token => token.id == tokenHUD.object.actor.token.id);
+    // Get array position of token in the controlled list
+    index_of_token = canvas.tokens.controlled.indexOf(token_with_hud_open);        
+  } 
+
+  return canvas.tokens.controlled[index_of_token]; // Our selected token, the token with TokenHUD opened
+}

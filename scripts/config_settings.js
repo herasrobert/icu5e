@@ -3,7 +3,7 @@
 Hooks.once("init", () => {
     //console.log("icu5e - init Test!")
 
-	game.settings.register("icu5e", "showIconFor", {
+	/*game.settings.register("icu5e", "showIconFor", {
 		name: "Show Icon For",
 		hint: "All - The Icon will appear on every token if you're GM. Characters - Only Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition.",
 		scope: "world",
@@ -12,6 +12,19 @@ Hooks.once("init", () => {
 		type: String,
 		choices: {
 			"All": "All",
+			"Characters": "Characters",
+			"Friendlies" : "Friendlies"
+		}
+	});*/
+
+	game.settings.register("icu5e", "showIconFor", {
+		name: "Show Icon For",
+		hint: "Characters - Only Characters. Friendlies - Only on tokens with a Friendly/Neutral disposition.",
+		scope: "world",
+		config: true,
+		default: "Characters",
+		type: String,
+		choices: {
 			"Characters": "Characters",
 			"Friendlies" : "Friendlies"
 		}
@@ -39,7 +52,7 @@ Hooks.once("init", () => {
 		type: Number
 	});
 
-	game.settings.register("icu5e", "howHandleMultipleTokens", {
+	/*game.settings.register("icu5e", "howHandleMultipleTokens", {
 		name: "How to handle multiple selected tokens?",
 		hint: "Simple - The token with the highest perception will be used. Per-Token - Each token will reveal what they can from their position.",
 		scope: "world",
@@ -50,7 +63,7 @@ Hooks.once("init", () => {
 			"Simple": "Simple",
 			"Per-Token": "Per-Token"
 		}
-	});
+	});*/
 
 	game.settings.register("icu5e", "veriantPerceptionDegradation", {
 		name: "Variant Perception Degradation",
@@ -80,7 +93,7 @@ Hooks.once("init", () => {
 	});
 
 	game.settings.register("icu5e", "displayPerceptionResults", {
-		name: "Display Perception Results",
+		name: "[Bugged!] Display Perception Results",
 		hint: "Display the results of the perception check in the chat.",
 		scope: "world",
 		config: true,
@@ -99,7 +112,7 @@ Hooks.once("init", () => {
 
 	game.settings.register("icu5e", "perceptionRollType", {
 		name: "Perception Roll Type",
-		hint: "[!Not Working!] Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
+		hint: "[Auto works; Request Doesn't] Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
 		scope: "world",
 		config: true,
 		default: "Auto",
