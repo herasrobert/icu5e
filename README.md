@@ -6,8 +6,6 @@ A module for <a href="https://foundryvtt.com/">FoundryVTT</a> that lets you draw
 
 Reveal any hidden enemies within X units if the Perception of the controlled token is greater than the Stealth of the Hostile token. The number of units can be edited within the Module Settings window. Adds an icon in the token hud (right-click the token).
 
-Handles multiple tokens selected. Simple - The token with the highest perception will be used. Per-Token - Each token will reveal what they can from their position
-
 <h2>Features</h2>
 
 **Variant Passive Degradation (Module Setting)** - I've added in an option for 'Variant Perception Degradation'. This implements the passive perception losing a score of 1 per 10 feet of distance. The further the target, the worse your perception.
@@ -22,7 +20,9 @@ Handles multiple tokens selected. Simple - The token with the highest perception
 
 **Account for Walls (Module Settings)** - If there's a wall that blocks line of sight, the token will not be revealed.
 
-**Automatice Passive Perception Checks (Module Settings)[Experimental]** - Autmatically check nearby tokens to reveal them when token is moved.
+**Active Perception Roll Type** - Auto - The Perception check will be automatically rolled by the token. Request - The player will receive a prompt requesting that they roll a Perception Check.
+
+**Automatice Passive Perception Checks (Module Settings)[Experimental]** - Automatically check nearby tokens to reveal them when token is moved.
 
 <h2>Install</h2>
 Check the releases to the right hand side
