@@ -125,7 +125,7 @@ Hooks.once("init", () => {
 
 	game.settings.register("icu5e", "requestedRollTimeout", {
 		name: "Requested Roll Timeout ",
-		hint: "How many milliseconds to wait for a player to perform a requested roll before the GM just automatically rolls it.",
+		hint: "How many milliseconds to wait for a player to perform a requested roll before the GM just automatically rolls it. Works only when 'Active Perception Roll Type' is set to Request.",
 		scope: "world",
 		config: true,
 		default: 30000,

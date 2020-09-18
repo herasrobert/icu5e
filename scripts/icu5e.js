@@ -76,10 +76,14 @@ function check_enemies_with_passive() {
     selected_tokens = get_usable_tokens_from_selected();
 
     for (const selected of selected_tokens) {
-        perception_check_logic(selected, selected.actor.data.data.skills.prc.passive)
+        // If Token is not already in our list of tokens pending a Perception Roll
+        if (!(tokens_pending_perception_roll.includes(selected.id))){
+            perception_check_logic(selected, selected.actor.data.data.skills.prc.passive)
+        } else {
+            ui.notifications.error("Token " + selected.name + "("+ selected.id +") is already pending a roll.");
+        }
     }
-
-    print_results_to_chat(chat_text);
+    if (chat_text != ""){ print_results_to_chat(chat_text); }
 }
 
 async function check_enemies_with_active() {
@@ -98,7 +102,7 @@ async function check_enemies_with_active() {
             perception_check_logic(selected, perc_check_score)
         }
 
-        print_results_to_chat(chat_text);
+        if (chat_text != ""){ print_results_to_chat(chat_text); }
 
     } else if (perception_roll_type == "Request"){
         let requested_roll_timeout = game.settings.get("icu5e", "requestedRollTimeout").valueOf();
@@ -112,14 +116,13 @@ async function check_enemies_with_active() {
                 // Append token to list of pending tokens
                 tokens_pending_perception_roll.push(token.id);
 
-                // Timeout so if the player doesn't answer, the GM auto rolls
-                
+                // Timeout so if the player doesn't answer, the GM auto rolls                
                 setTimeout(() => {
                     if (tokens_pending_perception_roll.includes(token.id)){
-                        console.log("Timeout achieved for ", token.id);
+                        chat_text = "";
                         perc_check_score = auto_roll_perception(token);
                         perception_check_logic(token, perc_check_score);
-                        remove_token_id_from_array(token, tokens_pending_perception_roll);
+                        if (chat_text != ""){ print_results_to_chat(chat_text); }
                     }
                 }, requested_roll_timeout);
 
@@ -221,17 +224,15 @@ function gm_process_percepton_results(data){
         perception_check_logic(selected, perc_check_score)
         remove_token_id_from_array(selected, tokens_pending_perception_roll)
 
-        print_results_to_chat(chat_text);
+        if (chat_text != ""){ print_results_to_chat(chat_text); }
     }
 
 }
 
 // Remove Token ID from Array
 function remove_token_id_from_array(token, array){
-    console.log(array, "before");
     var index = tokens_pending_perception_roll.indexOf(token.id);
     array.splice(index, 1);
-    console.log(array, "after");
 }
 
 // Roll the Requested Skill
@@ -351,189 +352,3 @@ function print_results_to_chat(results){
 
 
 
-
-/*
-----------------SOCKET FOR REQUEST ROLL----------------
-your button sends socket event to player to request perc roll
-socket listener on client side gets that, makes roll, sends socket event back with results of roll
-dont need to listen to chat hooks then
-now you have result of roll back on GM side, in your response listener you can do whatever you want with it
-no timing problems as your code only runs whenever the results happen to get back
-but if you wanted an autotime out you could add one on GM side easily
-just when you fire off 1st socket event, set some UUID for the event in a local var
-include UUID in all your socket comms
-in your GM listener, check if UUID is still valid, if so proceed as normal
-remove UUID from list when processed
-then when you fire off first socket event to player, add a local setTimeout() that after 10 seconds, if hasn't heard back (i.e. UUID is still valid) run handler function
-which, as mentioned above, removes UUID from list, so you can't have 2 events trigger
-*/
-
-
-/*
-----ORIGINAL LOGIC----
-for (const placed_token of canvas.tokens.placeables) {
-    if (placed_token.data.disposition === -1){ 
-        for (const selected of selected_tokens) {
-            let perc_check_score = 0; // The final Perception score of a token
-            if (placed_token.data.hidden) { // If token is 'Hidden'
-
-                let token_stealth = placed_token.actor.data.data.skills.ste.passive;
-                let calculated_distance = 0;
-
-                // Keep a list of Character tokens and the Perception Score they already rolled
-                if (!perception_scores_list.some(token => token.id === selected.id)){
-                  
-                        if (perception_roll_type == "Auto"){
-
-                            // Create new roll string: 1d20 + Perception Score
-                            let perception_roll_String = "1d20 + " + selected.actor.data.data.skills.prc.total;
-
-                            // Roll Token Perception
-                            let rolled_perception = new Roll(perception_roll_String).roll();
-
-                            // Display rolled Perception as a message
-                            rolled_perception.toMessage({
-                                speaker: {
-                                    alias: selected.data.name
-                                },
-                                flavor: "icu5e-Perception Check",
-                                purpose: "tester"
-                            })
-
-                        } else if (perception_roll_type == "Request"){
-                            // Emit a socket event
-                            game.socket.emit('module.icu5e', {
-                                operation: 'roll_perception',
-                                user: game.user.id,
-                                content: '<Put UID here>',
-                            });
-                            //////// What if player isn't present?
-                            // Obtain Perception Score
-                            // Request roll using socket
-                            // perc_check_score = rolled_value...
-                        }
-
-                        // Read chat or "pick it up with a hook on gm side if you need to do something with it" - Vance
-
-                        // perc_check_score = rolled value
-                   
-
-                    // Add token to the list we're using to keep track of which tokens already have a perception score to work with
-                    //perception_scores_list.push({id:selected.id, name:selected.name, perception:perc_check_score});
-                    //console.log(perception_scores_list);
-                }
-
-                //if (perc_check_score == 0){ perc_check_score = perception_scores_list.find(token => token.id === selected.id).perception; }
-
-                // Calculate distance based on chosen method
-                if (distance_type == "Euclidean"){
-                    calculated_distance = canvas.grid.measureDistance(selected, placed_token);
-                } else if (distance_type == "Grid") {
-                    // Measure grid distance
-                    let gridsize = canvas.grid.size;
-                    let d1 = Math.abs((selected.x - placed_token.x) / gridsize);
-                    let d2 = Math.abs((selected.y - placed_token.y) / gridsize);
-                    let dist = Math.max(d1, d2);
-
-                    calculated_distance = dist * canvas.scene.data.gridDistance;
-                }
-
-                if ((calculated_distance <= max_distance)) { // If Enemy is within max distance
-
-                    // Draw ray from selected token to hostile and skip token if it collides with a wall
-                    if (account_for_walls == true){
-                        const ray = new Ray(selected.center, placed_token.center);                            
-                        const collisions = WallsLayer.getWallCollisionsForRay(ray, canvas.walls.blockVision);                            
-                        wall_in_the_way = collisions.length > 0;
-                        if (wall_in_the_way) {console.log("contiunuing");continue;} // Wall is in the way, skip this token
-                    }
-
-                    if (is_perception_degradating == true){
-                        perc_check_score -= Math.floor(calculated_distance / 10); // Degrade Perception by -1 per 10 feet                            
-                        //console.log("Name: " + placed_token.name + ", PS: " + token_stealth + ", Dist: " + calculated_distance + ", PP: " +  perc_check_score);
-                    }
-
-                    // If GM Stealth Overide is Enabled and getFlag does not return undefined
-                    if (allow_gm_stealth_overide == true && !(placed_token.getFlag("icu5e", "stealth_score") === undefined)) {
-                        token_stealth = placed_token.getFlag("icu5e", "stealth_score");
-                    }
-
-                    if (perc_check_score >= token_stealth && !wall_in_the_way){ // If Enemy Passive Stealth <= Passive Perception
-                        await placed_token.toggleVisibility();
-                        console.log(selected.name, perc_check_score);
-                        // Append Chat Message
-                        perception_results_text += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
-                    }
-                }
-            }
-        }
-    }
-}
-  
-if (display_perception_results_text == true){
-    if (perception_results_text == ""){perception_results_text = "It doesn't seem anyone was revealed."}
-    let chatData = {
-        user: game.user._id,
-        speaker: ChatMessage.getSpeaker(),
-        content: perception_results_text
-    };
-    ChatMessage.create(chatData, {});
-}*/
-
-
-
-
-
-
-
-
-
-
-//------------------------
-
-//----EARLIER LOGIC----
-/*
-      canvas.tokens.placeables.forEach(placed_token => {
-        if (placed_token.data.disposition === -1){ // If token has a 'Hostile' disposition
-
-            let list_of_revealed_hostiles = [];
-            // for each selected token (Only one if 'Simple', or all if 'Per-Token')
-            selected_tokens.forEach(selected => {
-
-                //// if token is in list_of_revealed_hostiles
-                
-                if (placed_token.data.hidden) { // If token is 'Hidden'
-                        
-                    let calculated_distance = canvas.grid.measureDistance(selected, placed_token); // Calculate Distance                
-
-                    if ((calculated_distance <= max_distance)) { // If Enemy is within max distance                    
-
-                        let token_stealth = placed_token.actor.data.data.skills.ste.passive;
-                        let perc_check_score = selected.actor.data.data.skills.prc.passive;
-
-                        if (is_perception_degradating == true){
-                            perc_check_score -= Math.floor(calculated_distance / 10); // Degrade Perception by -1 per 10 feet                            
-                            //console.log("Name: " + placed_token.name + ", PS: " + token_stealth + ", Dist: " + calculated_distance + ", PP: " +  perc_check_score);
-                        }
-
-                        // If GM Stealth Overide is Enabled and getFlag does not return undefined
-                        if (allow_gm_stealth_overide == true && !(placed_token.getFlag("icu5e", "stealth_score") === undefined)) {
-                            token_stealth = placed_token.getFlag("icu5e", "stealth_score");
-                        }
-
-                        if (perc_check_score >= token_stealth){ // If Enemy Passive Stealth <= Passive Perception
-                            placed_token.toggleVisibility();
-
-                            //list_of_revealed_hostile.push(placed_token.id); // Add revealed hostile token ID to list_of_revealed_hostiles
-                            console.log(placed_token.id)
-
-                            ///perception_results_text += selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]<br>\n";
-                            console.log(selected.name + " revealed " + placed_token.name + " [" + token_stealth + "]");
-                        }                        
-                    }
-                    
-                }
-
-            });
-        }
-      });*/

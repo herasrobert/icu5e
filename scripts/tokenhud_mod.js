@@ -2,6 +2,9 @@
 
 // Hook into Token HUD
 Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
+    console.log(html);
+
+    
     //console.log("icu5e - renderTokenHUD Test!")
     if (game.user.isGM == true){
       let show_icon_for = game.settings.get("icu5e", "showIconFor").valueOf();
@@ -42,8 +45,6 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 
 // Show the Icon to 'Scan' with Perception
 function show_icon(tokenHUD,html){
-    let player_token_stealth_mode = game.settings.get("icu5e", "playerTokenStealthMode").valueOf();
-
     // The Icon you want to add to the HUD
     const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
 
