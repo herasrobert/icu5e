@@ -46,6 +46,17 @@ Because of the way the distance calculation works, add 2 units to the actual val
 
 <h2>ChangeLog</h2>
 
+<h4>Version 1.4.1</h4>
+<ul>
+  <li>Removed support for 'Simple' when handling multiple tokens. The module will handle multiple tokens on a Per-Token basis; each token will reveal what they can from their position.</li>
+  <li>Active Perception Roll [Binocular Icon] - GM can Auto roll Perception Checks for given token or Request the roll from the players all at the click of a button.</li>
+  <li>Slight Improvement to 'Automatically Scan' - Now only acts on Hostile tokens</li>
+  <li>[Experimental] Stealth Mode - Player token is Hidden from everyone but remains visible to the GM and the token Owner to simulate the player stealthing from everyone else.</li>
+  <li>Bug Fix: Display Perception Results is not working and not printing which hostile tokens are revealed</li>
+  <li>Bug Fix: Perception Degradation had a bug that caused it to fail.</li>
+  <li>Refactored a lot of code in order to be able easily add improvements in the future.</li>
+</ul>
+
 <h4>Version 1.3.8</h4>
 <ul>
   <li>Groundwork for having GM auto-roll perception or request player to roll perception. Also setup a 'scan' to occur every time a token is moved using it's passive perception to experiment with it [EXPERIMENTAL!]. </li>
