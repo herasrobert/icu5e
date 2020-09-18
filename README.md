@@ -24,6 +24,8 @@ Reveal any hidden enemies within X units if the Perception of the controlled tok
 
 **Automatice Passive Perception Checks (Module Settings)[Experimental]** - Automatically check nearby tokens to reveal them when token is moved.
 
+**Stealth Mode (Module Setting)[Experimental]** - Player token is Hidden from everyone but remains visible to the GM and the token Owner to simulate the player stealthing from everyone else.
+
 <h2>Install</h2>
 Check the releases to the right hand side
 
