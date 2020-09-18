@@ -20,9 +20,8 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 
       // Only show icons for Hostiles when Hostile is hidden
       if (tokenHUD.object.data.disposition === -1) {
-        
         // Find the Selected Hostile Token that we'll work with, accounts for multiple selected tokens
-        selected_hostile_token = find_selected_hostile(tokenHUD);
+        selected_hostile_token = find_selected_token(tokenHUD);
  
         if (selected_hostile_token.data.hidden){
          
@@ -43,21 +42,24 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 
 // Show the Icon to 'Scan' with Perception
 function show_icon(tokenHUD,html){
+    let player_token_stealth_mode = game.settings.get("icu5e", "playerTokenStealthMode").valueOf();
+
     // The Icon you want to add to the HUD
     const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
-    const scan_roll_btn = $('<i title="Roll for Active Perception" class="control-icon fa fa-binoculars" ></i>');
 
     // Add to right or left side of hud
     html.find(".right").append(scan_passive_btn);
-    html.find(".right").append(scan_roll_btn);
 
     // Do something when it's clicked
     scan_passive_btn.click(async () => {      
-      passive_check_enemies();
+      check_enemies_with_passive();
     })
 
+    // Active Passive Button
+    const scan_roll_btn = $('<i title="Roll for Active Perception" class="control-icon fa fa-binoculars" ></i>');
+    html.find(".right").append(scan_roll_btn);
     scan_roll_btn.click(async () => {
-      active_check_enemies();
+      check_enemies_with_active();
     })
 }
 
@@ -120,10 +122,8 @@ async function show_stealth_roll(selected_hostile_token, tokenHUD,html){
 }
 
 // Find and Return the hostile token that has the tokenHUD open
-function find_selected_hostile(tokenHUD){
+function find_selected_token(tokenHUD){
   let index_of_token = 0;
-  let selected_hostile_token;
-
   // If more than one token controlled; find token with the TokenHUD opened and that's the one we'll work with
   if (canvas.tokens.controlled.length > 1) {
     // Get ID of the token that tokenHUD was opened on

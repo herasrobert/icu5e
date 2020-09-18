@@ -112,7 +112,7 @@ Hooks.once("init", () => {
 
 	game.settings.register("icu5e", "activePerceptionRollType", {
 		name: "Active Perception Roll Type",
-		hint: "[Auto works; Request Doesn't] Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
+		hint: "Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
 		scope: "world",
 		config: true,
 		default: "Auto",
@@ -121,6 +121,24 @@ Hooks.once("init", () => {
 			"Auto": "Auto",
 			"Request": "Request"
 		}
+	});
+
+	game.settings.register("icu5e", "requestedRollTimeout", {
+		name: "Requested Roll Timeout ",
+		hint: "How many milliseconds to wait for a player to perform a requested roll before the GM just automatically rolls it.",
+		scope: "world",
+		config: true,
+		default: 30000,
+		type: Number
+	});
+
+	game.settings.register("icu5e", "playerTokenStealthMode", {
+		name: "Player Token Stealth Mode",
+		hint: "[!EXPERIMENTAL!] Button to hide player token from everyone except the token owner and the GM.",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
 	});
 
 	game.settings.register("icu5e", "autoRunOnTokenMove", {
