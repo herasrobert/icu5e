@@ -46,7 +46,7 @@ Hooks.on("renderTokenHUD", (tokenHUD,html,app) => {
 // Show the Icon to 'Scan' with Perception
 function show_icon(tokenHUD,html){
     // The Icon you want to add to the HUD
-    const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
+    /*const scan_passive_btn = $('<i title="Scan with Passive Perception" class="control-icon fa fa-eye" ></i>');
 
     // Add to right or left side of hud
     html.find(".right").append(scan_passive_btn);
@@ -61,7 +61,20 @@ function show_icon(tokenHUD,html){
     html.find(".right").append(scan_roll_btn);
     scan_roll_btn.click(async () => {
       check_enemies_with_active();
-    })
+    })*/
+
+  const scan_passive_btn = '<div id = "scan_passive_btn"; title="Scan with Passive Perception"; class="control-icon fa fa-eye"><div style="position:absolute;left:100%;" id = "scan_roll_btn"; class="control-icon fa fa-binoculars"></div></div>'
+
+  html.find(".right").append(scan_passive_btn);
+
+  $( "#scan_passive_btn" ).click(async function() {
+    check_enemies_with_passive();
+  });
+
+  $( "#scan_roll_btn" ).click(async function() {
+    check_enemies_with_active();
+  });
+  
 }
 
 // Show Box to allow GM to insert Stealth Score

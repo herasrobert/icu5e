@@ -141,8 +141,9 @@ async function check_enemies_with_active() {
     }
 }
 
-// Initial Logic Steps for Revealing Tokens
+// Initial Logic Steps for Revealing Tokens and Walls
 function perception_check_logic(selected, perception_score){
+    // Reveal Tokens
     for (const placed_token of canvas.tokens.placeables) {
         if (placed_token.data.disposition === -1){ 
             if (placed_token.data.hidden) { // If token is 'Hidden'
@@ -154,8 +155,21 @@ function perception_check_logic(selected, perception_score){
                     perception_score = selected.actor.data.data.skills.prc.passive;
                 }
 
-                if (check_range(selected, placed_token)) { // If Enemy is within max distance
+                if (check_token_range(selected, placed_token)) { // If Enemy is within max distance
                     is_revealable_hostile(selected, placed_token, perception_score, token_stealth);
+                }
+            }
+        }
+    }
+    
+    // Reveal Walls
+    let reveal_secret_doors = game.settings.get("icu5e", "revealSecretDoors").valueOf();
+    if (reveal_secret_doors){
+        for (const wall of canvas.walls.placeables) {
+            if (wall.data.door == 2 && wall.data.ds == 0){ // If Secret and Closed
+                // If wall is within range
+                if (check_wall_range(selected, wall)){
+                    is_revealable_wall(selected, wall, perception_score);
                 }
             }
         }
@@ -275,8 +289,8 @@ function get_usable_tokens_from_selected(){
     return selected_tokens;
 }
 
-// Check if Token is within defined range of another token i.e. Is friendly token within range of hostile token
-function get_calculated_distance(selected_token, placed_token){
+// Calculate the distance between two tokens i.e. Is friendly token within range of hostile token
+function get_token_calculated_distance(selected_token, placed_token){
     let distance_type = game.settings.get("icu5e", "distanceCalculationType").valueOf();
     let calculated_distance = 0;
 
@@ -295,10 +309,40 @@ function get_calculated_distance(selected_token, placed_token){
     return calculated_distance;
 }
 
-function check_range(selected_token, placed_token){
+// Return if the distance between the two token is within max_distance
+function check_token_range(selected_token, placed_token){
     let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
 
-    calculated_distance = get_calculated_distance(selected_token, placed_token)
+    calculated_distance = get_token_calculated_distance(selected_token, placed_token)
+    return (calculated_distance <= max_distance)
+}
+
+// Calculate the distance between the given token and the given wall
+function get_wall_calculated_distance(selected_token, wall){
+    let distance_type = game.settings.get("icu5e", "distanceCalculationType").valueOf();
+    let calculated_distance = 0;
+
+    // Calculate distance based on chosen method
+    if (distance_type == "Euclidean"){
+        
+        /// calculated_distance = canvas.grid.measureDistance(selected_token, placed_token);
+
+    } else if (distance_type == "Grid") {
+        let gridsize = canvas.grid.size;
+        let d1 = Math.abs((selected_token.x - wall.center.x) / gridsize);
+        let d2 = Math.abs((selected_token.y - wall.center.y) / gridsize);
+        let dist = Math.max(d1, d2);
+
+        calculated_distance = dist * canvas.scene.data.gridDistance;
+    }
+    return calculated_distance;
+}
+
+// Return if the distance between the token and the wall is within max_distance
+function check_wall_range(selected_token, wall){
+    let max_distance = game.settings.get("icu5e", "calculateDistance").valueOf();
+
+    calculated_distance = get_wall_calculated_distance(selected_token, wall)
     return (calculated_distance <= max_distance)
 }
 
@@ -319,17 +363,50 @@ async function is_revealable_hostile(friendly_token, hostile_token, perception_s
 
     if (is_perception_degradating == true){
         // Degrade Perception by -1 per 10 feet
-        perception_score -= Math.floor(get_calculated_distance(friendly_token, hostile_token) / 10);
+        perception_score -= Math.floor(get_token_calculated_distance(friendly_token, hostile_token) / 10);
     }
 
     // If GM Stealth Overide is Enabled and getFlag does not return undefined
     if (allow_gm_stealth_overide == true && !(hostile_token.getFlag("icu5e", "stealth_score") === undefined)) {
         stealth_score = hostile_token.getFlag("icu5e", "stealth_score");
     }
-    // If Enemy Passive Stealth <= Passive Perception AND no walls are in the way
+    // If Enemy Stealth Score <= Perception Score AND no walls are in the way
     if (perception_score >= stealth_score && !wall_in_the_way){
         chat_text += friendly_token.name + " revealed " + hostile_token.name + " [" + stealth_score + "]<br>";
         await hostile_token.toggleVisibility();
+    }
+}
+
+async function is_revealable_wall(selected, wall, perception_score){
+    let is_perception_degradating = game.settings.get("icu5e", "veriantPerceptionDegradation").valueOf();
+    let account_for_walls = game.settings.get("icu5e", "acountForWalls").valueOf();
+    let wall_in_the_way = false;
+    let door_stealth_score;
+
+    // Draw ray from friendly_token to wall
+    if (account_for_walls == true){
+        const ray = new Ray(selected.center, wall.center);
+        const collisions = WallsLayer.getWallCollisionsForRay(ray, canvas.walls.blockVision);                        
+        // If the ray is colliding with more than one wall on its way to our given wall, 
+        //then we assume there is a wall in the way
+        wall_in_the_way = collisions.length > 1;
+    }
+    if (is_perception_degradating == true){
+        // Degrade Perception by -1 per 10 feet
+        perception_score -= Math.floor(get_wall_calculated_distance(selected, wall) / 10);
+    }
+
+    // If the wall has a flag value, set value of input box to the flag value
+    if (!(wall.getFlag("icu5e", "door_stealth_score") === undefined)){
+        door_stealth_score = wall.getFlag("icu5e", "door_stealth_score");
+    } else {
+        door_stealth_score = 50; // else default to a value of 50 which should never be reached
+    }
+
+    // If Door Stealth Score <= Perception Score AND no walls are in the way
+    if (perception_score >= door_stealth_score && !wall_in_the_way){
+        //chat_text += friendly_token.name + " revealed " + hostile_token.name + " [" + stealth_score + "]<br>";
+        await wall.update({ds : 1})
     }
 }
 
@@ -349,6 +426,60 @@ function print_results_to_chat(results){
     chat_text = "";
 }
 
+// Return Token given its ID
+function find_wall_by_wall_id(wall_id){
+    // Find Wall based on passed ID
+    for (const wall of canvas.walls.placeables) {
+        if (wall.id == wall_id){
+            return selected_wall = wall;
+        }
+    }
+    return;
+}
+
+Hooks.on('renderWallConfig', async (app, html, object) => {
+    let reveal_secret_doors = game.settings.get("icu5e", "revealSecretDoors").valueOf();
+    if (reveal_secret_doors){
+        
+        // Get Wall by ID
+        let selected_wall = find_wall_by_wall_id(object.object._id);
+
+        let door_stealth_score;
+        
+        // If the wall has a flag value, set value of input box to the flag value
+        if (!(selected_wall.getFlag("icu5e", "door_stealth_score") === undefined)){
+            door_stealth_score = selected_wall.getFlag("icu5e", "door_stealth_score");
+        } else {
+            door_stealth_score = 50; // else default to a value of 50 which should never be reached
+        }
+
+        
+        // Path to module templates
+        const my_template = '/modules/icu5e/templates/secret_door.html';
+
+        // Get the handlebars output
+        const my_html = await renderTemplate(my_template, { door_stealth_score });
+
+        // Find form elements and inject their counterparts
+        // Slightly complicated example here to show how to find a form element when
+        //   it only has a name and not a class or ID, but any jQuery selector works
+        const target = $(html).find('[name="door"]').parent();
+
+        // Inject your handlebars template (can also use .before() of course)
+        target.after(my_html);
+    }
+  });
 
 
+Hooks.on('updateWall', async (app, object, changes) => {
+    // If Config_Settings-Reveacl Secret Walls == True
+    let reveal_secret_doors = game.settings.get("icu5e", "revealSecretDoors").valueOf();
+    let selected_wall;
 
+    if (reveal_secret_doors){
+        if (changes.Reveal_DC != undefined) {
+            selected_wall = find_wall_by_wall_id(object._id);
+            await selected_wall.setFlag("icu5e", "door_stealth_score", object.Reveal_DC);
+        }
+    }
+});

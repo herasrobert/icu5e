@@ -115,7 +115,7 @@ Hooks.once("init", () => {
 		hint: "Which type of Active Perception check to use. Auto - The Perception check will be auto rolled by the token. Request - Request token owner to roll.",
 		scope: "world",
 		config: true,
-		default: "Auto",
+		default: "Request",
 		type: String,
 		choices: {
 			"Auto": "Auto",
@@ -130,6 +130,15 @@ Hooks.once("init", () => {
 		config: true,
 		default: 30000,
 		type: Number
+	});
+	
+	game.settings.register("icu5e", "revealSecretDoors", {
+		name: "Reveal Secret Doors",
+		hint: "[!EXPERIMENTAL!] Reveal secret doors with perception checks)",
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
 	});
 
 	game.settings.register("icu5e", "playerTokenStealthMode", {
@@ -149,5 +158,7 @@ Hooks.once("init", () => {
 		default: false,
 		type: Boolean,
 	});
+
+	
 
   });
