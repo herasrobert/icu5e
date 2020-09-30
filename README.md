@@ -1,6 +1,6 @@
 <h1>icu5e</h1>
 
-A module for <a href="https://foundryvtt.com/">FoundryVTT</a> that lets you draw fog of war manually.
+A module for <a href="https://foundryvtt.com/">FoundryVTT</a> that lets you use Passive Perception and Active Perception checks to reveal hidden enemy tokens.
 
 <h2>Purpose</h2>
 
